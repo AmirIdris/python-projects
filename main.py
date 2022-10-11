@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import simpledialog, messagebox
 import string
 import random
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
@@ -16,12 +17,19 @@ def generate_new_password():
 
 
 def save_data_to_txt():
-    print(email_input.get())
-    print(website_input.get())
-    with open("data.txt", "a") as save_data:
-        save_data.write(f"{website_input.get()} | {email_input.get()} | {password_input.get()} \n")
-        website_input.delete(0, END)
-        password_input.delete(0, END)
+    # answer = simpledialog.askstring("Answer The Dialog", f"Your Website is {website_input.get()} \n Your Password is:{password_input.get()}", parent=window)
+    # if answer is not None:
+    #     print("You have Confirmed That we are good to go")
+
+    if website_input.get() == "" or email_input.get()== "" or password_input.get() == "":
+        messagebox.showinfo(title="Error", message="You have Left Some Fields empity")
+    else:
+        is_ok = messagebox.askokcancel(title=website_input.get(), message=f"This are The details:\n Email:{email_input.get()}\n Password:{password_input.get()} \n Is it Ok to save.")
+        if is_ok:
+            with open("data.txt", "a") as save_data:
+                save_data.write(f"{website_input.get()} | {email_input.get()} | {password_input.get()} \n")
+                website_input.delete(0, END)
+                password_input.delete(0, END)
 
 
 # ---------------------------- UI SETUP ------------------------------- #
