@@ -1,17 +1,27 @@
 from tkinter import *
 from tkinter import simpledialog, messagebox
-import string
+from random import choice, randint, shuffle
+from string import ascii_lowercase, digits, punctuation
 import random
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
 
 def generate_new_password():
 
-    source = string.ascii_lowercase + string.ascii_uppercase + string.digits + string.punctuation
-    password_list = ""
-    for _ in range(15):
-        password_list = password_list + random.choice(source)
-    password_input.insert(0, password_list)
+    lowercase_letter_range = randint(8, 10)
+    number_range = randint(2, 4)
+    symbol_ranges = randint(2, 4)
+    lowercase_letter_list = [choice(ascii_lowercase) for _ in range(lowercase_letter_range)]
+    number_list = [choice(digits) for _ in range(number_range)]
+    symbol_list = [choice(punctuation) for _ in range(symbol_ranges)]
+
+    password_list = lowercase_letter_list + number_list + symbol_list
+    shuffle(password_list)
+    password = ""
+    for char in password_list:
+        password = password + char
+
+    password_input.insert(0, password)
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 
