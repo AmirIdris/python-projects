@@ -2,7 +2,8 @@ from tkinter import *
 from tkinter import simpledialog, messagebox
 from random import choice, randint, shuffle
 from string import ascii_lowercase, digits, punctuation
-import random
+import pyperclip
+import json
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
 
@@ -22,22 +23,44 @@ def generate_new_password():
         password = password + char
 
     password_input.insert(0, password)
+    pyperclip.copy(password)
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 
 
 def save_data_to_txt():
-    # answer = simpledialog.askstring("Answer The Dialog", f"Your Website is {website_input.get()} \n Your Password is:{password_input.get()}", parent=window)
-    # if answer is not None:
-    #     print("You have Confirmed That we are good to go")
+    email = email_input.get()
+    website = website_input.get()
+    password = password_input.get()
 
-    if website_input.get() == "" or email_input.get()== "" or password_input.get() == "":
+    new_data = {
+        website: {
+            "email":email,
+            "password":password
+        }
+    }
+
+    if website == "" or email == "" or password == "":
         messagebox.showinfo(title="Error", message="You have Left Some Fields empity")
     else:
-        is_ok = messagebox.askokcancel(title=website_input.get(), message=f"This are The details:\n Email:{email_input.get()}\n Password:{password_input.get()} \n Is it Ok to save.")
+        is_ok = messagebox.askokcancel(title=website, message=f"This are The details:\n Email:{email}\n Password:{password} \n Is it Ok to save.")
         if is_ok:
-            with open("data.txt", "a") as save_data:
-                save_data.write(f"{website_input.get()} | {email_input.get()} | {password_input.get()} \n")
+            try:
+                with open("data.json", "r") as data_file:
+
+                    # read the data from json file
+                    data = json.load(data_file)
+                    # update the old data with new data
+            except FileNotFoundError:
+                with open("data.json", "w") as data_file:
+                    # dumping the new data to the json file
+                    json.dump(new_data, data_file, indent=4)
+            else:
+                data.update(new_data)
+                with open("data.json", "w") as data_file:
+                    # dumping the new data to the json file
+                    json.dump(data, data_file, indent=4)
+            finally:
                 website_input.delete(0, END)
                 password_input.delete(0, END)
 
