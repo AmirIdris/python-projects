@@ -4,6 +4,31 @@ from random import choice, randint, shuffle
 from string import ascii_lowercase, digits, punctuation
 import pyperclip
 import json
+# ---------------------------- SEARCH PASSWORD ------------------------------- #
+
+
+def find_password():
+    website = website_input.get()
+    if website == "":
+        messagebox.showinfo(title="Error", message="You Cannot Search Empty String")
+    else:
+        try:
+            with open("data.json", "r") as data_file:
+                data = json.load(data_file)
+        except FileNotFoundError:
+            messagebox.showinfo(title="Error", message="No Data File Found")
+
+        else:
+            try:
+                result = data[website]
+            except KeyError:
+                messagebox.showinfo(title="Error", message="No Detail For The website")
+            else:
+                password = result["password"]
+                user_email = result["email"]
+                messagebox.showinfo(title="Dialog Info", message=f"Here is Your Password: {password}\n Here is Your Email: {user_email} \n")
+
+
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
 
@@ -75,9 +100,9 @@ canvas.create_image(80, 100, image=logo_img)
 canvas.grid(row=0, column=1)
 website_label = Label(text="Website:")
 website_label.grid(column=0, row=1)
-website_input = Entry(width=35)
+website_input = Entry(width=21)
 website_input.focus()
-website_input.grid(column=1, row=1, columnspan=2)
+website_input.grid(column=1, row=1)
 email_label = Label(text="Email/Username:")
 email_label.grid(row=2, column=0)
 email_input = Entry(width=35)
@@ -90,8 +115,13 @@ password_label.grid(row=3, column=0)
 
 password_input=Entry(width=21)
 password_input.grid(row=3, column=1)
+# Search Button Creation
+search = Button(text="Search", bg="Blue", command=find_password)
+search.grid(row=1, column=2)
+# generate button creation
 generate_button = Button(text="Generate Password", command=generate_new_password)
 generate_button.grid(row=3, column=2)
+# Add Button Creation
 add_button = Button(text="Add", width=36, command=save_data_to_txt)
 add_button.grid(row=4, column=1, columnspan=2)
 
